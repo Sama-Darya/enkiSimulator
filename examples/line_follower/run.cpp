@@ -232,6 +232,7 @@ virtual void sceneCompletedHook()
 #endif
 
         net->updateWeights();
+        net->snapWeights();
         net->setInputs(pred_pointer);
         net->propInputs();
 

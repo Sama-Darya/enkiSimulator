@@ -40,14 +40,14 @@ plt.show()
 
 #%%
 
-coofig=plt.figure('coordinates')
-coorddata=np.loadtxt('{}coordData.tsv'.format(path));
-img=mpimg.imread('{}cc.png'.format(path))
-imgplot = plt.imshow(img)
-plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
-#plt.scatter(4*[0,160,0,160], 4*[0,0,200,200], color='black')
-coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
-plt.show()
+#coofig=plt.figure('coordinates')
+#coorddata=np.loadtxt('{}coordData.tsv'.format(path));
+#img=mpimg.imread('{}cc.png'.format(path))
+#imgplot = plt.imshow(img)
+#plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
+##plt.scatter(4*[0,160,0,160], 4*[0,0,200,200], color='black')
+#coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
+#plt.show()
 
 #%%
 
@@ -59,7 +59,7 @@ numLayerNeurons=stat[1::]
 #for i in range(2): #range(numPredictors):
 #    predictor=bpc.predictor(i+1)
 #    predictor.plotPredictor(errorNorm)
-#    
+    
     
 
 #%%

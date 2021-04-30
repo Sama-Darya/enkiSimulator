@@ -90,7 +90,7 @@ class layer():
     
     def __init__ (self, name):
         self.name=name
-        self.data=np.loadtxt('{}layerWeight{}.csv'.format(path, self.name))
+        self.data=np.loadtxt('{}wL{}.csv'.format(path, self.name))
         self.data=self.data/(np.amax(abs(self.data)))
         self.numNeurons=self.data.shape[0]
         self.numInputs=self.data.shape[1]
