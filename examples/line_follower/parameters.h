@@ -6,7 +6,7 @@
 #define STEPSCOUNT 10000
 // Network Structure
 #define nPROPAGATIONS 1
-#define LEARNINGRATE 0.1
+#define LEARNINGRATE 0.01
 
 #define NLAYERS 11
     #define N1 10
@@ -23,7 +23,7 @@
 
 // Predictor Array
 #define ROW1P 11
-#define ROW1N 10
+#define ROW1N 6
 #define ROW1S 2
 
 #define ROW2P 12
@@ -31,12 +31,12 @@
 #define ROW2S 2
 
 #define ROW3P 13
-#define ROW3N 4
+#define ROW3N 6
 #define ROW3S 2
 
 // Error Arrays
-#define SENSORLEFT 8
-#define SENSORRIGHT -8
+#define SENSORLEFT 5
+#define SENSORRIGHT -5
 
 // Filter Specifications
 #define NFILTERS 5
@@ -46,9 +46,9 @@
 
 // Robot speed
 #define SPEED 20 // for reflex it is 60
-#define ERRORGAIN 40 //50// for reflex it is 200
+#define ERRORGAIN 150 // for reflex it is 200
 
-#define NETWORKGAIN 2 //3
-#define PREDGAIN 100
+#define NETWORKGAIN 20
+#define PREDGAIN 1
 
 

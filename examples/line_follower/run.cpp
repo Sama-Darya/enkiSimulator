@@ -236,7 +236,7 @@ virtual void sceneCompletedHook()
         net->setInputs(pred_pointer);
         net->propInputs();
 
-        double Output= net->getOutput(0) + 5 * net->getOutput(1);
+        double Output= net->getOutput(0) + 2 * net->getOutput(1);
         double error2 = error + Output * NETWORKGAIN;
         racer->leftSpeed  = speed + error2;
         racer->rightSpeed = speed - error2;
