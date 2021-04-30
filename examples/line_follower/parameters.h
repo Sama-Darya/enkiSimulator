@@ -6,7 +6,7 @@
 #define STEPSCOUNT 10000
 // Network Structure
 #define nPROPAGATIONS 1
-#define LEARNINGRATE 0.001
+#define LEARNINGRATE 0.1
 
 #define NLAYERS 11
     #define N1 10
@@ -46,9 +46,9 @@
 
 // Robot speed
 #define SPEED 20 // for reflex it is 60
-#define ERRORGAIN 50 // for reflex it is 200
+#define ERRORGAIN 40 //50// for reflex it is 200
 
-#define NETWORKGAIN 2
+#define NETWORKGAIN 2 //3
 #define PREDGAIN 100
 
 
