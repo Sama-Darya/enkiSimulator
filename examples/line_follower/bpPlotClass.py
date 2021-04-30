@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import matplotlib as mpl
 
+#path='/home/sama/Documents/enkiSimulator/examples/line_follower/' #build-enkiSimulator-Desktop-Debug/'
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
 spath='./'
 

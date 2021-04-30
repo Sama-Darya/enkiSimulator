@@ -13,7 +13,9 @@ import matplotlib.image as mpimg
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams.update({'font.size': 9})
 
+#path='/home/sama/Documents/enkiSimulator/examples/line_follower/' #build-enkiSimulator-Desktop-Debug/'
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
+
 spath='./'
 #sizeY=3
 #ratioYX=4

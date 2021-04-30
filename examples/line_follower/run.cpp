@@ -57,6 +57,7 @@ It has also a camera which looks to the front and IR sensors
 
 #define learning
 //#define reflex
+#define oldMethod
 
 using namespace Enki;
 using namespace std;
@@ -91,6 +92,7 @@ protected:
     FILE* stats = nullptr;
     FILE* wlog = nullptr;
     FILE* gradientlog = nullptr;
+    std::vector<int> injectionLayers_BackProp;
 #endif
 
 
@@ -153,9 +155,15 @@ public:
         int nLayers= NLAYERS;
         int nNeurons[NLAYERS]={N1,N2,N3,N4,N5,N6,N7,N8,N9,N10,N11};
         int* nNeuronsp=nNeurons;
+#ifdef oldMethod
+        net = new Net(NLAYERS, nNeuronsp, NetnInputs);
+#else
         net = new Net(nLayers, nNeuronsp, NetnInputs, nPROPAGATIONS);
+#endif
         net->initNetwork(Neuron::W_RANDOM, Neuron::B_NONE, Neuron::Act_Sigmoid);
         net->setLearningRate(LEARNINGRATE);
+        injectionLayers_BackProp.reserve(1);
+        injectionLayers_BackProp = {NLAYERS-1};
         pred = new double[nInputs];
         fprintf(stats, "%d\n", nPredictors);
         for (int i=0; i<nLayers; i++){
@@ -212,20 +220,20 @@ virtual void sceneCompletedHook()
             net->propInputs();
             firstStep = 0;
         }
-        std::vector<int> injectionLayers;
-            injectionLayers.reserve(NLAYERS);
-            injectionLayers = {NLAYERS-1};
-
-        net->masterPropagate(injectionLayers, 0,
+#ifdef oldMethod
+        net->setErrorCoeff(0,1,0,0,0,0);
+        net->setGlobalError(error);
+        net->setBackwardError(error);
+        net->propErrorBackward();
+#else
+        net->masterPropagate(injectionLayers_BackProp, 0,
                                      Net::BACKWARD, error,
                                      Neuron::Value);
-//        net->masterPropagate(injectionLayers, 1,
-//                                     Net::FORWARD, error,
-//                                     Neuron::Absolute);
+#endif
+
         net->updateWeights();
         net->setInputs(pred_pointer);
         net->propInputs();
-
 
         double Output= net->getOutput(0) + 5 * net->getOutput(1);
         double error2 = error + Output * NETWORKGAIN;
@@ -235,6 +243,7 @@ virtual void sceneCompletedHook()
         // save to files:
         for(int i=0; i<nPredictors; i++) {
             fprintf(predlog,"%e\t",pred[i]);
+
         }
         fprintf(predlog,"\n");
 
@@ -250,12 +259,13 @@ virtual void sceneCompletedHook()
         }
         fprintf(wlog, "%e\n", net->getWeightDistance());
 
+#ifdef oldMethod
+#else
         net->snapFistLayerWeights();
+#endif
 #endif
         fprintf(fcoord,"%e\t%e\n",racer->pos.x,racer->pos.y);
         countSteps ++;
-
-
         if (countSteps == STEPSCOUNT){
             cout<< "exiting program: total number of steps is achieved" <<endl;
             qApp->quit();

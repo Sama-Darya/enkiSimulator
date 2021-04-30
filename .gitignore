@@ -68,3 +68,7 @@ examples/line_follower/predictor18
 examples/line_follower/predictor19
 
 examples/line_follower/predictor2
+
+examples/line_follower/weightchange
+
+examples/line_follower/__pycache__/
