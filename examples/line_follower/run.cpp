@@ -270,7 +270,8 @@ virtual void sceneCompletedHook()
         countSteps ++;
 #ifdef learning
         if(countSteps > 500){
-            if(error < 1){
+            if(abs(error) < 1){
+                cout << error << endl;
                 success += 1;
                 if(success == 500){
                     cout<< "exiting program: learning is achieved" <<endl;
