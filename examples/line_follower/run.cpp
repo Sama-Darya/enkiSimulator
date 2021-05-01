@@ -269,12 +269,11 @@ virtual void sceneCompletedHook()
         fprintf(fcoord,"%e\t%e\n",racer->pos.x,racer->pos.y);
         countSteps ++;
 #ifdef learning
-        if(countSteps > 500){
+        if(countSteps > 10){
             if(abs(error) < 1){
-                cout << error << endl;
                 success += 1;
                 if(success == 500){
-                    cout<< "exiting program: learning is achieved" <<endl;
+                    cout<< "Learning was achieved at step: " << countSteps - success << endl;
                     qApp->quit();
                 }
             }else{
