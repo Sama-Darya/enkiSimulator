@@ -103,7 +103,7 @@ public:
 		EnkiWidget(world, parent)
 	{
         racer = new Racer(nInputs);
-        racer->pos = Point(maxx/2 +35, maxy/2 +5); // x and y of the start point
+        racer->pos = Point(maxx/2 + 0, maxy/2 + 0); // x and y of the start point
         racer->leftSpeed = speed;
         racer->rightSpeed = speed;
         world->addObject(racer);
