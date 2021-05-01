@@ -73,6 +73,7 @@ int nInputs= ROW1N+ROW2N+ROW3N;
     int nPredictors=nInputs;
 #endif
 
+
 class EnkiPlayground : public EnkiWidget
 {
 protected:
@@ -244,7 +245,6 @@ virtual void sceneCompletedHook()
         // save to files:
         for(int i=0; i<nPredictors; i++) {
             fprintf(predlog,"%e\t",pred[i]);
-
         }
         fprintf(predlog,"\n");
 

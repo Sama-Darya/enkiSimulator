@@ -6,7 +6,8 @@
 #define STEPSCOUNT 10000
 // Network Structure
 #define nPROPAGATIONS 1
-#define LEARNINGRATE 0.01
+#define LEARNINGRATE 0.001
+
 
 #define NLAYERS 11
     #define N1 10
