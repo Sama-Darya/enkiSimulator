@@ -67,6 +67,7 @@ double	maxx = 250;
 double	maxy = 250;
 
 int countSteps=0;
+int success = 0;
 int firstStep = 1; //so that it does propInputs once and then back/forth in that order
 int nInputs= ROW1N+ROW2N+ROW3N;
 #ifdef learning
@@ -267,10 +268,26 @@ virtual void sceneCompletedHook()
 #endif
         fprintf(fcoord,"%e\t%e\n",racer->pos.x,racer->pos.y);
         countSteps ++;
+#ifdef learning
+        if(countSteps > 500){
+            if(error < 1){
+                success += 1;
+                if(success == 500){
+                    cout<< "exiting program: learning is achieved" <<endl;
+                    qApp->quit();
+                }
+            }else{
+                success = 0;
+            }
+        }
+#else
         if (countSteps == STEPSCOUNT){
             cout<< "exiting program: total number of steps is achieved" <<endl;
             qApp->quit();
         }
+#endif
+
+
 //        milliseconds ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
 //        cout << "time is: " << ms.count() << endl;
     }

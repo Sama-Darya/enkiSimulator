@@ -98,8 +98,8 @@ class layer():
 
     def plotLayerWeights(self):
         
-        print(np.amax(self.data))
-        print(np.amin(self.data))
+#        print(np.amax(self.data))
+#        print(np.amin(self.data))
         fig, ax = plt.subplots()
         myimage=ax.imshow(self.data,cmap='gray',interpolation='none')
         fig.colorbar(myimage,ax=ax)

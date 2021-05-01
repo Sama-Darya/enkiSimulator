@@ -46,7 +46,7 @@ plt.show()
 #imgplot = plt.imshow(img)
 #plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
 ##plt.scatter(4*[0,160,0,160], 4*[0,0,200,200], color='black')
-#coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
+  #coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
 #plt.show()
 
 #%%
