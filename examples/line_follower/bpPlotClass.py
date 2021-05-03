@@ -13,10 +13,10 @@ import matplotlib as mpl
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
 spath='./'
 
-sizeY=3
-ratioYX=4
-my_dpi=600
-imgSize=2
+#sizeY=3
+#ratioYX=4
+#my_dpi=600
+#imgSize=2
 
 class predictor():
     
@@ -42,10 +42,10 @@ class predictor():
     def plotPredictor(self,error):
         
         
-        fig=plt.figure('predictor%d' %self.name, figsize=(3,1), dpi=my_dpi)
+        fig=plt.figure('predictor%d' %self.name) #, figsize=(3,1), dpi=my_dpi)
         ax=fig.add_subplot(111)
         
-        plt.plot(self.predictor/max(abs(self.predictor)), color='silver', linewidth=0.3)
+        plt.plot(self.predictor/max(abs(self.predictor)), color='red', linewidth=0.3)
         
         #plt.plot(self.filtdata1/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         #plt.plot(self.filtdata2/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
@@ -53,13 +53,13 @@ class predictor():
         #plt.plot(self.filtdata4/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         plt.plot(self.filtdata5/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         
-        plt.plot(error, color='black', linewidth=0.5)
+        plt.plot(error, color='black', linewidth=0.3)
         
         #plt.ylabel('Predictor %d' %self.name)
-        plt.ylim(-1.1, 1.1)
-        plt.yticks([-1,0,1])
-        plt.xticks([0,len(self.predictor)])
-        ax.set_aspect(aspect=len(self.predictor)/(7))
+#        plt.ylim(-1.1, 1.1)
+#        plt.yticks([-1,0,1])
+#        plt.xticks([0,len(self.predictor)])
+#        ax.set_aspect(aspect=len(self.predictor)/(7))
         plt.show()
         fig.savefig(spath+'predictor%d' %self.name, quality= 100, format='svg', bbox_inches='tight')
 

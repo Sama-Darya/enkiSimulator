@@ -13,41 +13,29 @@ import matplotlib.image as mpimg
 plt.rcParams['font.family'] = 'serif'
 plt.rcParams.update({'font.size': 9})
 
-#path='/home/sama/Documents/enkiSimulator/examples/line_follower/' #build-enkiSimulator-Desktop-Debug/'
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
-
 spath='./'
-#sizeY=3
-#ratioYX=4
-#my_dpi=300
 
 plt.close("all")
 
 
 #%%
 error=np.loadtxt('{}errorData.tsv'.format(path));
-#minE=min(error); maxE=max(abs(error))
-errorNorm=error #/maxE
 errorfig=plt.figure('error')
 axe=errorfig.add_subplot(111)
 plt.plot(error, color='black', linestyle="-", linewidth=0.5)
-#plt.ylim(-0.3, 0.3)
-#plt.yticks([-0.2, -0.1, 0, 0.1, 0.2])
-#plt.xticks(np.arange(0,len(error),250))
-#axe.set_aspect(aspect=len(error)/(.6*3))
 errorfig.savefig(spath+'error_signal', quality= 100, format='svg', bbox_inches='tight')
 plt.show()
 
 #%%
 
-#coofig=plt.figure('coordinates')
-#coorddata=np.loadtxt('{}coordData.tsv'.format(path));
-#img=mpimg.imread('{}cc.png'.format(path))
-#imgplot = plt.imshow(img)
-#plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
-##plt.scatter(4*[0,160,0,160], 4*[0,0,200,200], color='black')
-  #coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
-#plt.show()
+coofig=plt.figure('coordinates')
+coorddata=np.loadtxt('{}coordData.tsv'.format(path));
+img=mpimg.imread('{}cc.png'.format(path))
+imgplot = plt.imshow(img)
+plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
+coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
+plt.show()
 
 #%%
 
@@ -56,9 +44,9 @@ stat=statRaw.astype(np.int16)
 numPredictors=stat[0]
 numLayerNeurons=stat[1::]
 
-#for i in range(2): #range(numPredictors):
-#    predictor=bpc.predictor(i+1)
-#    predictor.plotPredictor(errorNorm)
+for i in range(numPredictors):
+    predictor=bpc.predictor(i+1)
+    predictor.plotPredictor(error)
     
     
 
