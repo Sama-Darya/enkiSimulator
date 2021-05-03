@@ -16,14 +16,15 @@ plt.rcParams.update({'font.size': 9})
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
 spath='./'
 
-plt.close("all")
+#plt.close("all")
+mycolor = "green"
 
 
 #%%
 error=np.loadtxt('{}errorData.tsv'.format(path));
 errorfig=plt.figure('error')
 axe=errorfig.add_subplot(111)
-plt.plot(error, color='black', linestyle="-", linewidth=0.5)
+plt.plot(error, color= mycolor , linestyle="-", linewidth=0.5)
 errorfig.savefig(spath+'error_signal', quality= 100, format='svg', bbox_inches='tight')
 plt.show()
 
@@ -33,7 +34,7 @@ coofig=plt.figure('coordinates')
 coorddata=np.loadtxt('{}coordData.tsv'.format(path));
 img=mpimg.imread('{}cc.png'.format(path))
 imgplot = plt.imshow(img)
-plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color='black', linestyle="--", linewidth=0.5)
+plt.plot((coorddata[:,0])*4, 1000-(coorddata[:,1])*4, color= mycolor, linestyle="--", linewidth=0.5)
 coofig.savefig(spath+'coordData', quality=100, format='svg', bbox_inches='tight')
 plt.show()
 
@@ -44,10 +45,10 @@ stat=statRaw.astype(np.int16)
 numPredictors=stat[0]
 numLayerNeurons=stat[1::]
 
-for i in range(3): #numPredictors):
-    predictor=bpc.predictor(i+1)
-    predictor.plotPredictor(error)
-    
+#for i in range(3): #numPredictors):
+#    predictor=bpc.predictor(i+1)
+#    predictor.plotPredictor(error)
+#    
     
 
 #%%
@@ -58,7 +59,7 @@ wch1=wch[:,nLayers] # only looking at the overal weight change
 
 wchfig=plt.figure('weigth change')
 axe=wchfig.add_subplot(111)
-plt.plot(wch1, color='black', linestyle="-", linewidth=0.5)
+plt.plot(wch1, color = mycolor, linestyle="-", linewidth=0.5)
 wchfig.savefig(spath+'weightchange', quality= 100, format='svg', bbox_inches='tight')
 plt.show()
 

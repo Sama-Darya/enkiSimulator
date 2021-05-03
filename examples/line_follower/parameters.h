@@ -47,9 +47,9 @@
 
 // Robot speed
 #define SPEED 20 // for reflex it is 60
-#define ERRORGAIN 150 // for reflex it is 200
+#define ERRORGAIN 100 // for reflex it is 200
 
-#define NETWORKGAIN 20
+#define NETWORKGAIN 2
 #define PREDGAIN 1
 
 

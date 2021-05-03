@@ -58,6 +58,7 @@ It has also a camera which looks to the front and IR sensors
 #define learning
 //#define reflex
 #define oldMethod
+#define derivativeLearning
 
 using namespace Enki;
 using namespace std;
@@ -194,7 +195,10 @@ virtual void sceneCompletedHook()
 	{
 		double leftGround = racer->groundSensorLeft.getValue();
 		double rightGround = racer->groundSensorRight.getValue();
-        double error = (leftGround - rightGround) * ERRORGAIN;
+        double error = 0;
+        double oldError = error;
+        error = (leftGround - rightGround) * ERRORGAIN;
+        double errorDerivative = (oldError - error) /2;
         fprintf(errorlog, "%e\t", error);
 
 
@@ -224,7 +228,9 @@ virtual void sceneCompletedHook()
         }
 #ifdef oldMethod
         net->setErrorCoeff(0,1,0,0,0,0);
-        net->setGlobalError(error);
+#ifdef derivativeLearning
+        net->setLearningRate(exp(error * errorDerivative));
+#endif
         net->setBackwardError(error);
         net->propErrorBackward();
 #else
@@ -269,10 +275,10 @@ virtual void sceneCompletedHook()
         fprintf(fcoord,"%e\t%e\n",racer->pos.x,racer->pos.y);
         countSteps ++;
 #ifdef learning
-        if(countSteps > 10){
-            if(abs(error) < 1){
+        if(countSteps > 10){ //start testing for sucess after a few steps
+            if(abs(error) < 0.1){
                 success += 1;
-                if(success == 500){
+                if(success == 300){ // if the error stays small for long enough then we call it a day
                     cout<< "Learning was achieved at step: " << countSteps - success << endl;
                     qApp->quit();
                 }
@@ -286,8 +292,6 @@ virtual void sceneCompletedHook()
             qApp->quit();
         }
 #endif
-
-
 //        milliseconds ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
 //        cout << "time is: " << ms.count() << endl;
     }
