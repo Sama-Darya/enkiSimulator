@@ -16,8 +16,8 @@ plt.rcParams.update({'font.size': 9})
 path='/home/sama/Documents/enkiSimulator/examples/build-enkiSimulator-Desktop-Debug/'
 spath='./'
 
-#plt.close("all")
-mycolor = "green"
+plt.close("all")
+mycolor = "black"
 
 
 #%%

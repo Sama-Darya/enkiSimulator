@@ -72,6 +72,8 @@ namespace Enki
 		//! Ground Sensor right
 		GroundSensor groundSensorRight;
 
+        GroundSensor RelevanceSensor;
+
         GroundSensor** groundSensorArray;
         int iterate=0;
 

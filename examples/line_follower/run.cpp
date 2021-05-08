@@ -57,8 +57,8 @@ It has also a camera which looks to the front and IR sensors
 
 #define learning
 //#define reflex
-#define oldMethod
-#define derivativeLearning
+//#define oldMethod
+//#define derivativeLearning
 
 using namespace Enki;
 using namespace std;
@@ -196,9 +196,13 @@ virtual void sceneCompletedHook()
 		double leftGround = racer->groundSensorLeft.getValue();
 		double rightGround = racer->groundSensorRight.getValue();
         double error = 0;
+
+#ifdef derivativeLearning
         double oldError = error;
-        error = (leftGround - rightGround) * ERRORGAIN;
         double errorDerivative = (oldError - error) /2;
+#endif
+        error = (leftGround - rightGround) * ERRORGAIN;
+
         fprintf(errorlog, "%e\t", error);
 
 
@@ -226,11 +230,18 @@ virtual void sceneCompletedHook()
             net->propInputs();
             firstStep = 0;
         }
-#ifdef oldMethod
-        net->setErrorCoeff(0,1,0,0,0,0);
+
+//        double relevanceSignal = racer->RelevanceSensor.getValue();
+//        double lRate = 0.001 / abs(relevanceSignal);
+//        cout << relevanceSignal << " " << lRate << endl;
+//        net->setLearningRate(lRate);
+
 #ifdef derivativeLearning
         net->setLearningRate(exp(error * errorDerivative));
 #endif
+
+#ifdef oldMethod
+        net->setErrorCoeff(0,1,0,0,0,0);
         net->setBackwardError(error);
         net->propErrorBackward();
 #else
@@ -310,7 +321,7 @@ int main(int argc, char *argv[])
     const uint32_t *bits = (const uint32_t*)gt.constBits();
     World world(maxx, maxy,
                 Color(1000, 1000, 1000), World::GroundTexture(gt.width(), gt.height(), bits));
-//    cout<<gt.width()<<" "<<gt.height()<<endl;
+    cout<<gt.width()<<" "<<gt.height()<<endl;
     EnkiPlayground viewer(&world);
     viewer.show();
     return app.exec();
