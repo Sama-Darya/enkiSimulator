@@ -45,7 +45,7 @@ class predictor():
         fig=plt.figure('predictor%d' %self.name) #, figsize=(3,1), dpi=my_dpi)
         ax=fig.add_subplot(111)
         
-        plt.plot(self.predictor/max(abs(self.predictor)), color='red', linewidth=0.3)
+        plt.plot(self.predictor/max(abs(self.predictor)), color='blue', linewidth=0.3)
         
         #plt.plot(self.filtdata1/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         #plt.plot(self.filtdata2/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
@@ -53,7 +53,7 @@ class predictor():
         #plt.plot(self.filtdata4/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         plt.plot(self.filtdata5/max(abs(self.predictor)), color='grey', linestyle='dashed', linewidth=0.2)
         
-        plt.plot(error, color='black', linewidth=0.3)
+        #plt.plot(error, color='black', linewidth=0.3)
         
         #plt.ylabel('Predictor %d' %self.name)
 #        plt.ylim(-1.1, 1.1)

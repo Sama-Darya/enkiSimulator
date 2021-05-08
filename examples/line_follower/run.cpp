@@ -53,12 +53,7 @@ It has also a camera which looks to the front and IR sensors
 #include "bandpass.h"
 #include "parameters.h"
 #include <chrono>
-
-
-#define learning
-//#define reflex
-//#define oldMethod
-//#define derivativeLearning
+#include <boost/circular_buffer.hpp>
 
 using namespace Enki;
 using namespace std;
@@ -74,6 +69,7 @@ int nInputs= ROW1N+ROW2N+ROW3N;
 #ifdef learning
     int nPredictors=nInputs;
 #endif
+boost::circular_buffer<double> movingIntegralError(200);
 
 
 class EnkiPlayground : public EnkiWidget
@@ -82,6 +78,7 @@ protected:
 	Racer* racer;
     double speed = SPEED, prevX, prevY, prevA;
     FILE* errorlog = nullptr;
+    FILE* integlog = nullptr;
     FILE* fcoord = nullptr;
     FILE* fspeed = nullptr;
 
@@ -109,8 +106,10 @@ public:
         racer->rightSpeed = speed;
         world->addObject(racer);
 
+
         fcoord = fopen("coordData.tsv","wt");
         errorlog = fopen("errorData.tsv","wt");
+        integlog = fopen("errorInteg.tsv","wt");
         fspeed = fopen ("speeds.tsv","wt");
 
 #ifdef learning
@@ -177,6 +176,7 @@ public:
     ~EnkiPlayground(){
         fclose(fcoord);
         fclose(errorlog);
+        fclose(integlog);
         fclose(fspeed);
 #ifdef learning
         fclose(stats);
@@ -197,13 +197,16 @@ virtual void sceneCompletedHook()
 		double rightGround = racer->groundSensorRight.getValue();
         double error = 0;
 
-#ifdef derivativeLearning
+#ifdef significanceLearning
         double oldError = error;
         double errorDerivative = (oldError - error) /2;
 #endif
         error = (leftGround - rightGround) * ERRORGAIN;
 
+        movingIntegralError.push_back(abs(error));
+        double integralError = std::accumulate(movingIntegralError.begin(), movingIntegralError.end(), 0.00);
         fprintf(errorlog, "%e\t", error);
+        fprintf(integlog, "%e\t", integralError);
 
 
 #ifdef reflex
@@ -215,12 +218,36 @@ virtual void sceneCompletedHook()
         for(int i=0; i<nInputs; i++) {
             // workaround of a bug in Enki
             pred[i] = - (racer->groundSensorArray[i]->getValue()) * PREDGAIN;
-            if (pred[i]<0) pred[i] = 0;
-        }       
+            if (pred[i]<0){ pred[i] = 0;}
+        }
+        //finding the gradient of the road ahead:
+        double maxRow1 = 0.00;
+        int maxIndex1 = -1;
+        for(int i = 0; i <ROW1N; i++){
+            if(abs(pred[i]) > maxRow1){
+                maxRow1 = abs(pred[i]);
+                maxIndex1 = i;
+            }
+        }
+        double maxRow2 = 0.00;
+        int maxIndex2 = -1;
+        for(int i = 0; i <ROW2N; i++){
+            if(abs(pred[ROW1N+i]) > maxRow2){
+                maxRow2 = abs(pred[ROW1N+i]);
+                maxIndex2 = i;
+            }
+        }
+        int gradientCue = abs(maxIndex2 - maxIndex1) + 1; // +1 is so that it does not turn off the learning
+        fprintf(gradientlog,"%d\t",gradientCue);
+//        cout << gradientCue << endl;
+
+
+
         double pred_filtered[nPredictors][NFILTERS];
         for (int i=0; i<nPredictors; i++){
             for (int j=0; j<NFILTERS; j++){
                 pred_filtered[i][j]=bandpass[i][j]->filter(pred[i]);
+//                cout << pred_filtered[i][j] << endl;
             }
         }
         double* pred_pointer= pred_filtered[0];
@@ -231,23 +258,17 @@ virtual void sceneCompletedHook()
             firstStep = 0;
         }
 
-//        double relevanceSignal = racer->RelevanceSensor.getValue();
-//        double lRate = 0.001 / abs(relevanceSignal);
-//        cout << relevanceSignal << " " << lRate << endl;
-//        net->setLearningRate(lRate);
 
-#ifdef derivativeLearning
-        net->setLearningRate(exp(error * errorDerivative));
-#endif
-
-#ifdef oldMethod
-        net->setErrorCoeff(0,1,0,0,0,0);
-        net->setBackwardError(error);
-        net->propErrorBackward();
+#ifdef significanceLearning
+        net->setLearningRate(LEARNINGRATE * gradientCue * exp(error * errorDerivative));
+        net->masterPropagate(injectionLayers_BackProp, 0,
+                                     Net::BACKWARD, error,
+                                     Neuron::Sign);
 #else
         net->masterPropagate(injectionLayers_BackProp, 0,
                                      Net::BACKWARD, error,
                                      Neuron::Value);
+
 #endif
 
         net->updateWeights();
@@ -286,10 +307,13 @@ virtual void sceneCompletedHook()
         fprintf(fcoord,"%e\t%e\n",racer->pos.x,racer->pos.y);
         countSteps ++;
 #ifdef learning
-        if(countSteps > 10){ //start testing for sucess after a few steps
-            if(abs(error) < 0.1){
+        if(countSteps > 200){ //start testing for sucess after a few steps
+            if(abs(integralError) < 0.1){
                 success += 1;
-                if(success == 300){ // if the error stays small for long enough then we call it a day
+                if(success == 200){ // if the error stays small for long enough then we call it a day
+#ifdef significanceLearning
+                    cout<< "significance Learning " << endl;
+#endif
                     cout<< "Learning was achieved at step: " << countSteps - success << endl;
                     qApp->quit();
                 }
@@ -321,7 +345,7 @@ int main(int argc, char *argv[])
     const uint32_t *bits = (const uint32_t*)gt.constBits();
     World world(maxx, maxy,
                 Color(1000, 1000, 1000), World::GroundTexture(gt.width(), gt.height(), bits));
-    cout<<gt.width()<<" "<<gt.height()<<endl;
+//    cout<<gt.width()<<" "<<gt.height()<<endl;
     EnkiPlayground viewer(&world);
     viewer.show();
     return app.exec();

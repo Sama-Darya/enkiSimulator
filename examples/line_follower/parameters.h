@@ -3,10 +3,15 @@
 
 #endif // PARAMETERS_H
 
+#define learning
+//#define reflex
+//#define oldMethod
+#define significanceLearning
+
 #define STEPSCOUNT 10000
 // Network Structure
 #define nPROPAGATIONS 1
-#define LEARNINGRATE 0.001
+#define LEARNINGRATE 0.00001
 
 
 #define NLAYERS 11
@@ -24,16 +29,16 @@
 
 // Predictor Array
 #define ROW1P 11
-#define ROW1N 6
-#define ROW1S 2
+#define ROW1N 48
+#define ROW1S 0.25
 
 #define ROW2P 12
-#define ROW2N 6
-#define ROW2S 2
+#define ROW2N 48
+#define ROW2S 0.25
 
 #define ROW3P 13
-#define ROW3N 6
-#define ROW3S 2
+#define ROW3N 48
+#define ROW3S 0.25
 
 // Error Arrays
 #define SENSORLEFT 5
@@ -46,10 +51,10 @@
 #define DAMPINGCOEFF 0.51
 
 // Robot speed
-#define SPEED 20 // for reflex it is 60
-#define ERRORGAIN 100 // for reflex it is 200
+#define SPEED 30 // for reflex it is 60
+#define ERRORGAIN 50 // for reflex it is 200
 
-#define NETWORKGAIN 10
+#define NETWORKGAIN 5
 #define PREDGAIN 1
 
 

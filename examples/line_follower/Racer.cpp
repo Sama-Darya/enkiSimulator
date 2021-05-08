@@ -43,8 +43,7 @@ namespace Enki
         infraredSensorRight(this, Vector(11, -10), 100, -M_PI/200, 2, 1200, -0.9, 7, 20),
 		camera(this, Vector(0, 0), 0, 0.0, M_PI/4, 50),
         groundSensorLeft (this, Vector(10, SENSORLEFT), 0, 1, 1, 0),
-        groundSensorRight(this, Vector(10, SENSORRIGHT),0, 1, 1, 0),
-        RelevanceSensor (this, Vector(10, 0), 0, 1, 1, 0)
+        groundSensorRight(this, Vector(10, SENSORRIGHT),0, 1, 1, 0)
     {
         nSensors = _nSensors;
         if (nSensors%2) {
@@ -59,7 +58,6 @@ namespace Enki
 		addLocalInteraction(&camera);
 		addLocalInteraction(&groundSensorLeft);
 		addLocalInteraction(&groundSensorRight);
-        addLocalInteraction(&RelevanceSensor);
 
         setRectangular(20,10,5, 80); // length, width, height, mass of the robot
         setColor(0);
