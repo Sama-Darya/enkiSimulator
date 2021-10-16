@@ -4,14 +4,15 @@
 #endif // PARAMETERS_H
 
 #define learning
+//#define impulseMeasure
 //#define reflex
 //#define oldMethod
-#define significanceLearning
+//#define significanceLearning
 
-#define STEPSCOUNT 10000
+#define STEPSCOUNT 1000
 // Network Structure
 #define nPROPAGATIONS 1
-#define LEARNINGRATE 0.00001
+#define LEARNINGRATE 0.1
 
 
 #define NLAYERS 11

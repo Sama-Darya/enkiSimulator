@@ -93,6 +93,7 @@ protected:
     FILE* wlog = nullptr;
     FILE* gradientlog = nullptr;
     std::vector<int> injectionLayers_BackProp;
+    std::vector<int> injectionLayers_ForwardProp;
 #endif
 
 
@@ -101,7 +102,7 @@ public:
 		EnkiWidget(world, parent)
 	{
         racer = new Racer(nInputs);
-        racer->pos = Point(maxx/2 + 0, maxy/2 + 0); // x and y of the start point
+        racer->pos = Point(maxx/2 + (-100), maxy/2 + 0); // x and y of the start point
         racer->leftSpeed = speed;
         racer->rightSpeed = speed;
         world->addObject(racer);
@@ -166,6 +167,8 @@ public:
         net->setLearningRate(LEARNINGRATE);
         injectionLayers_BackProp.reserve(1);
         injectionLayers_BackProp = {NLAYERS-1};
+        injectionLayers_ForwardProp.reserve(1);
+        injectionLayers_ForwardProp = {0};
         pred = new double[nInputs];
         fprintf(stats, "%d\n", nPredictors);
         for (int i=0; i<nLayers; i++){
@@ -210,8 +213,16 @@ virtual void sceneCompletedHook()
 
 
 #ifdef reflex
-        racer->leftSpeed  = speed + error;
-        racer->rightSpeed = speed - error;
+        double AP = 0.00;
+#ifdef impulseMeasure
+        if (countSteps == 1){
+            AP = 1.00;
+        }else{
+            AP = 0.00;
+        }
+#endif
+        racer->leftSpeed  = speed + error + AP;
+        racer->rightSpeed = speed - error - AP;
 #endif
 
 #ifdef learning
@@ -266,9 +277,11 @@ virtual void sceneCompletedHook()
                                      Neuron::Sign);
 #else
         net->masterPropagate(injectionLayers_BackProp, 0,
-                                     Net::BACKWARD, error,
-                                     Neuron::Value);
-
+                             Net::BACKWARD, error,
+                             Neuron::Value);
+//        net->masterPropagate(injectionLayers_BackProp, 1,
+//                             Net::BACKWARD, error,
+//                             Neuron::Sign);
 #endif
 
         net->updateWeights();
@@ -280,6 +293,9 @@ virtual void sceneCompletedHook()
         double error2 = error + Output * NETWORKGAIN;
         racer->leftSpeed  = speed + error2;
         racer->rightSpeed = speed - error2;
+
+//        racer->leftSpeed  = speed + error + net->getOutput(0);
+//        racer->rightSpeed = speed - error - net->getOutput(1);
 
         // save to files:
         for(int i=0; i<nPredictors; i++) {
@@ -337,7 +353,12 @@ int main(int argc, char *argv[])
     srand(5);
     QApplication app(argc, argv);
     QImage gt;
+#ifdef impulseMeasure
+    gt = QGLWidget::convertToGLFormat(QImage("line.png"));
+#else
     gt = QGLWidget::convertToGLFormat(QImage("cc.png"));
+#endif
+
     if (gt.isNull()) {
         fprintf(stderr,"Texture file not found\n");
         exit(1);
